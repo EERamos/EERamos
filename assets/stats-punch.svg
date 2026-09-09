@@ -3,11 +3,16 @@
   .text { fill: #24292f; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
   .muted { fill: #656d76; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
   .accent { fill: #0969da; }
+  .accent-stroke { stroke: #0969da; }
   .line { stroke: #d0d7de; }
+  .panel { fill: transparent; stroke: #d0d7de; }
+  .soft { fill: #f6f8fa; }
   @media (prefers-color-scheme: dark) {
     .text { fill: #f0f6fc; }
     .muted { fill: #8c959f; }
     .line { stroke: #30363d; }
+    .panel { stroke: #30363d; }
+    .soft { fill: #161b22; }
   }
 </style>
 
