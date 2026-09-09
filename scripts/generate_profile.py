@@ -238,6 +238,111 @@ def toolkit_svg() -> str:
     return svg_shell(y + 4, "\n".join(parts))
 
 
+# ------------------------------------------------------------ github data ---
+
+def list_repos() -> list[dict]:
+    repos: list[dict] = []
+    page = 1
+    while True:
+        batch = github(
+            f"/users/{USER}/repos",
+            {"type": "owner", "sort": "pushed", "direction": "desc", "per_page": 100, "page": page},
+        )
+        if not batch:
+            break
+        repos.extend(batch)
+        if len(batch) < 100:
+            break
+        page += 1
+    return [r for r in repos if r.get("name") != USER and not r.get("fork")]
+
+
+def repo_commits(repo_full_name: str) -> list[dict]:
+    commits: list[dict] = []
+    for page in range(1, 11):
+        try:
+            batch = github(
+                f"/repos/{repo_full_name}/commits",
+                {"author": USER, "since": SINCE.isoformat().replace("+00:00", "Z"), "per_page": 100, "page": page},
+            )
+        except Exception:
+            break
+        if not isinstance(batch, list) or not batch:
+            break
+        commits.extend(batch)
+        if len(batch) < 100:
+            break
+    return commits
+
+
+def collect_commit_dates(repos: list[dict]) -> list[dt.datetime]:
+    dates: list[dt.datetime] = []
+    for repo in repos:
+        for item in repo_commits(repo["full_name"]):
+            stamp = ((item.get("commit") or {}).get("author") or {}).get("date")
+            if not stamp:
+                continue
+            try:
+                dates.append(dt.datetime.fromisoformat(stamp.replace("Z", "+00:00")))
+            except ValueError:
+                pass
+    return dates
+
+
+# ------------------------------------------------------------ dynamic card ---
+
+def month_keys(now_local: dt.datetime) -> list[tuple[int, int]]:
+    """Twelve (year, month) keys ending at ``now_local``'s month."""
+    keys = []
+    year, month = now_local.year, now_local.month
+    for _ in range(12):
+        keys.append((year, month))
+        month -= 1
+        if month == 0:
+            month, year = 12, year - 1
+    return keys[::-1]
+
+
+def activity_svg(dates: list[dt.datetime], now: dt.datetime | None = None) -> str:
+    now_local = (now or NOW).astimezone(TZ)
+    keys = month_keys(now_local)
+    local = [d.astimezone(TZ) for d in dates]
+    counts = Counter((d.year, d.month) for d in local)
+    values = [counts[k] for k in keys]
+    total = len(local)
+    active_days = len({d.date() for d in local})
+    best = max(values) if values else 0
+    day_word = "active day" if active_days == 1 else "active days"
+
+    chart_x, chart_y, chart_w, chart_h = 400, 40, 470, 80
+    gap = 10
+    bar_w = (chart_w - gap * 11) / 12
+    bars = []
+    for i, ((year, month), count) in enumerate(zip(keys, values)):
+        x = chart_x + i * (bar_w + gap)
+        height = 3 if best == 0 or count == 0 else max(3, chart_h * count / best)
+        y = chart_y + chart_h - height
+        fill = ACCENT if count else RAISED
+        bars.append(
+            f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_w:.1f}" height="{height:.1f}" rx="3" fill="{fill}" '
+            f'data-month="{year}-{month:02d}" data-count="{count}"/>'
+        )
+        label = dt.date(year, month, 1).strftime("%b").lower()
+        bars.append(f'<text class="f" x="{x + bar_w / 2:.1f}" y="{chart_y + chart_h + 18}" font-size="9" text-anchor="middle">{label}</text>')
+        if count:
+            bars.append(f'<text class="m" x="{x + bar_w / 2:.1f}" y="{y - 6:.1f}" font-size="9" text-anchor="middle">{count}</text>')
+
+    body = f'''
+<text class="f" x="28" y="36" font-size="10" letter-spacing="1.4">PUBLIC COMMITS · PAST 12 MONTHS</text>
+<text class="a" x="28" y="88" font-size="44" font-weight="700">{total:,}</text>
+<text class="m" x="28" y="114" font-size="11">{active_days} {day_word} · best month {best}</text>
+<text class="f" x="28" y="136" font-size="9">original public repositories only · Mexico City time</text>
+{''.join(bars)}
+<line x1="{chart_x}" y1="{chart_y + chart_h}" x2="{chart_x + chart_w}" y2="{chart_y + chart_h}" stroke="{BORDER}"/>
+'''
+    return svg_shell(156, body)
+
+
 # --------------------------------------------------------------- pipeline ---
 
 def write_static() -> None:

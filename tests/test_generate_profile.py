@@ -67,3 +67,34 @@ def test_write_static_emits_every_static_card_as_valid_xml(tmp_path, monkeypatch
     assert expected <= names
     for path in tmp_path.glob("*.svg"):
         parse(path.read_text(encoding="utf-8"))
+
+
+def test_month_keys_returns_twelve_months_ending_now():
+    now = dt.datetime(2026, 9, 9, 12, 0, tzinfo=gp.TZ)
+    keys = gp.month_keys(now)
+    assert len(keys) == 12
+    assert keys[0] == (2025, 10)
+    assert keys[-1] == (2026, 9)
+
+
+def test_month_keys_wraps_across_january():
+    keys = gp.month_keys(dt.datetime(2026, 2, 1, tzinfo=gp.TZ))
+    assert keys[0] == (2025, 3) and keys[-1] == (2026, 2)
+
+
+def test_activity_svg_with_no_commits_is_valid_and_shows_zero():
+    svg = gp.activity_svg([], now=dt.datetime(2026, 9, 9, tzinfo=dt.timezone.utc))
+    parse(svg)
+    assert ">0<" in svg
+    assert "0 active days" in svg
+
+
+def test_activity_svg_buckets_by_mexico_city_month():
+    # 2026-09-01 03:00 UTC is still Aug 31 in Mexico City (UTC-6).
+    commit = dt.datetime(2026, 9, 1, 3, 0, tzinfo=dt.timezone.utc)
+    svg = gp.activity_svg([commit], now=dt.datetime(2026, 9, 9, tzinfo=dt.timezone.utc))
+    parse(svg)
+    assert ">1<" in svg
+    assert "1 active day" in svg
+    assert 'data-month="2026-08" data-count="1"' in svg
+    assert 'data-month="2026-09" data-count="0"' in svg

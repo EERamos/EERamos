@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="262" viewBox="0 0 900 262" role="img">
+<style>
+  text { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+  .t { fill: #eaf0fb; }
+  .m { fill: #a8b3d0; }
+  .f { fill: #7884a8; }
+  .a { fill: #f0b400; }
+  .h { fill: #7d88a6; }
+</style>
+<rect x="0.5" y="0.5" width="899" height="261" rx="16" fill="#0d1220" stroke="#232d4d"/>
+<line x1="450" y1="34" x2="450" y2="228" stroke="#f0b400" stroke-opacity="0.35"/>
+<line x1="28" y1="130" x2="872" y2="130" stroke="#f0b400" stroke-opacity="0.35"/>
+<circle cx="450" cy="130" r="42" fill="#131a2c" stroke="#f0b400" stroke-width="1.5"/>
+<text class="a" x="450" y="126" text-anchor="middle" font-size="13" font-weight="700">CFA</text>
+<text class="a" x="450" y="145" text-anchor="middle" font-size="13" font-weight="700">CQF</text>
+<rect x="28" y="34" width="406" height="82" rx="12" fill="#131a2c" stroke="#232d4d"/>
+<text class="a" x="46" y="60" font-size="11" font-weight="700">01</text>
+<text class="t" x="80" y="65" font-size="14" font-weight="700">DERIVATIVES</text>
+<text class="m" x="80" y="89" font-size="11">pricing · Greeks · volatility</text>
+<rect x="466" y="34" width="406" height="82" rx="12" fill="#131a2c" stroke="#232d4d"/>
+<text class="a" x="484" y="60" font-size="11" font-weight="700">02</text>
+<text class="t" x="518" y="65" font-size="14" font-weight="700">RISK + CALIBRATION</text>
+<text class="m" x="518" y="89" font-size="11">market risk · credit · model calibration</text>
+<rect x="28" y="146" width="406" height="82" rx="12" fill="#131a2c" stroke="#232d4d"/>
+<text class="a" x="46" y="172" font-size="11" font-weight="700">03</text>
+<text class="t" x="80" y="177" font-size="14" font-weight="700">SYSTEMATIC RESEARCH</text>
+<text class="m" x="80" y="201" font-size="11">statistics · signals · testing</text>
+<rect x="466" y="146" width="406" height="82" rx="12" fill="#131a2c" stroke="#232d4d"/>
+<text class="a" x="484" y="172" font-size="11" font-weight="700">04</text>
+<text class="t" x="518" y="177" font-size="14" font-weight="700">APPLIED AI</text>
+<text class="m" x="518" y="201" font-size="11">agents · workflows · knowledge systems</text>
+</svg>

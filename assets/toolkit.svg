@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="264" viewBox="0 0 900 264" role="img">
+<style>
+  text { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+  .t { fill: #eaf0fb; }
+  .m { fill: #a8b3d0; }
+  .f { fill: #7884a8; }
+  .a { fill: #f0b400; }
+  .h { fill: #7d88a6; }
+</style>
+<rect x="0.5" y="0.5" width="899" height="263" rx="16" fill="#0d1220" stroke="#232d4d"/>
+<text class="a" x="28" y="39" font-size="10" letter-spacing="1.4">PRICING &amp; RISK</text>
+<rect x="200" y="24" width="158" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="279.2" y="39" font-size="11" text-anchor="middle">Black-Scholes-Merton</text>
+<rect x="366" y="24" width="63" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="397.9" y="39" font-size="11" text-anchor="middle">Greeks</text>
+<rect x="437" y="24" width="152" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="513.1" y="39" font-size="11" text-anchor="middle">implied &amp; risky vol</text>
+<rect x="597" y="24" width="199" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="696.6" y="39" font-size="11" text-anchor="middle">Newton-Raphson calibration</text>
+<rect x="200" y="54" width="117" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="258.7" y="69" font-size="11" text-anchor="middle">credit spreads</text>
+<rect x="325" y="54" width="97" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="374.0" y="69" font-size="11" text-anchor="middle">market risk</text>
+<text class="a" x="28" y="113" font-size="10" letter-spacing="1.4">RESEARCH &amp; STATS</text>
+<rect x="200" y="98" width="158" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="279.2" y="113" font-size="11" text-anchor="middle">return distributions</text>
+<rect x="366" y="98" width="124" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="428.5" y="113" font-size="11" text-anchor="middle">normality tests</text>
+<rect x="499" y="98" width="124" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="560.9" y="113" font-size="11" text-anchor="middle">sector analysis</text>
+<rect x="631" y="98" width="63" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="662.5" y="113" font-size="11" text-anchor="middle">Python</text>
+<rect x="702" y="98" width="111" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="757.2" y="113" font-size="11" text-anchor="middle">NumPy / SciPy</text>
+<rect x="200" y="128" width="63" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="231.5" y="143" font-size="11" text-anchor="middle">pandas</text>
+<text class="a" x="28" y="187" font-size="10" letter-spacing="1.4">BUILD</text>
+<rect x="200" y="172" width="90" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="245.1" y="187" font-size="11" text-anchor="middle">JavaScript</text>
+<rect x="298" y="172" width="90" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="343.3" y="187" font-size="11" text-anchor="middle">HTML / CSS</text>
+<rect x="396" y="172" width="104" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="448.3" y="187" font-size="11" text-anchor="middle">GitHub Pages</text>
+<rect x="508" y="172" width="117" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="567.0" y="187" font-size="11" text-anchor="middle">GitHub Actions</text>
+<rect x="634" y="172" width="111" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="689.1" y="187" font-size="11" text-anchor="middle">generated SVG</text>
+<text class="a" x="28" y="231" font-size="10" letter-spacing="1.4">APPLIED AI</text>
+<rect x="200" y="216" width="138" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="269.0" y="231" font-size="11" text-anchor="middle">agentic workflows</text>
+<rect x="346" y="216" width="97" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="394.4" y="231" font-size="11" text-anchor="middle">Claude Code</text>
+<rect x="451" y="216" width="42" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="472.2" y="231" font-size="11" text-anchor="middle">MCP</text>
+<rect x="501" y="216" width="138" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="570.4" y="231" font-size="11" text-anchor="middle">knowledge systems</text>
+<rect x="647" y="216" width="90" height="22" rx="11" fill="#131a2c" stroke="#232d4d"/>
+<text class="t" x="692.5" y="231" font-size="11" text-anchor="middle">automation</text>
+</svg>
