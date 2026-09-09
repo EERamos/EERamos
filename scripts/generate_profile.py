@@ -187,10 +187,55 @@ def hero_svg() -> str:
 <line x1="{x0}" y1="{y1}" x2="{x1}" y2="{y1}" stroke="{BORDER}" stroke-width="1"/>
 <line x1="{kx:.1f}" y1="{y1}" x2="{kx:.1f}" y2="{y1 + 5}" stroke="{FAINT}" stroke-width="1"/>
 <text class="f" x="{kx:.1f}" y="{y1 + 16}" font-size="9" text-anchor="middle">K</text>
-<text class="a" x="{x1}" y="{y0 + 2}" font-size="10" text-anchor="end">C(S) · Black-Scholes-Merton</text>
-<text class="f" x="{x1}" y="{y0 + 16}" font-size="9" text-anchor="end">dashed: max(S − K, 0)</text>
+<text class="a" x="{x0}" y="{y0 + 2}" font-size="10">C(S) · Black-Scholes-Merton</text>
+<text class="f" x="{x0}" y="{y0 + 16}" font-size="9">dashed: max(S − K, 0)</text>
 '''
     return svg_shell(210, body)
+
+
+def focus_map_svg() -> str:
+    cards = [
+        (28, 34, "01", "DERIVATIVES", "pricing · Greeks · volatility"),
+        (466, 34, "02", "RISK + CALIBRATION", "market risk · credit · model calibration"),
+        (28, 146, "03", "SYSTEMATIC RESEARCH", "statistics · signals · testing"),
+        (466, 146, "04", "APPLIED AI", "agents · workflows · knowledge systems"),
+    ]
+    cx, cy = 450, 130
+    parts = [
+        f'<line x1="{cx}" y1="34" x2="{cx}" y2="228" stroke="{ACCENT}" stroke-opacity="0.35"/>',
+        f'<line x1="28" y1="{cy}" x2="872" y2="{cy}" stroke="{ACCENT}" stroke-opacity="0.35"/>',
+        f'<circle cx="{cx}" cy="{cy}" r="42" fill="{RAISED}" stroke="{ACCENT}" stroke-width="1.5"/>',
+        f'<text class="a" x="{cx}" y="{cy - 4}" text-anchor="middle" font-size="13" font-weight="700">CFA</text>',
+        f'<text class="a" x="{cx}" y="{cy + 15}" text-anchor="middle" font-size="13" font-weight="700">CQF</text>',
+    ]
+    for x, y, num, title, subtitle in cards:
+        parts.extend([
+            f'<rect x="{x}" y="{y}" width="406" height="82" rx="12" fill="{RAISED}" stroke="{BORDER}"/>',
+            f'<text class="a" x="{x + 18}" y="{y + 26}" font-size="11" font-weight="700">{num}</text>',
+            f'<text class="t" x="{x + 52}" y="{y + 31}" font-size="14" font-weight="700">{esc(title)}</text>',
+            f'<text class="m" x="{x + 52}" y="{y + 55}" font-size="11">{esc(subtitle)}</text>',
+        ])
+    return svg_shell(262, "\n".join(parts))
+
+
+def toolkit_svg() -> str:
+    label_x, chips_x, max_x = 28, 200, W - 28
+    size, pad, gap, row_h, group_gap = 11, 11, 8, 30, 14
+    y = 24
+    parts: list[str] = []
+    for label, chips in TOOLKIT:
+        parts.append(f'<text class="a" x="{label_x}" y="{y + 15}" font-size="10" letter-spacing="1.4">{esc(label)}</text>')
+        x = chips_x
+        for chip in chips:
+            w = tw(chip, size) + 2 * pad
+            if x + w > max_x:
+                x = chips_x
+                y += row_h
+            parts.append(f'<rect x="{x:.0f}" y="{y}" width="{w:.0f}" height="22" rx="11" fill="{RAISED}" stroke="{BORDER}"/>')
+            parts.append(f'<text class="t" x="{x + w / 2:.1f}" y="{y + 15}" font-size="{size}" text-anchor="middle">{esc(chip)}</text>')
+            x += w + gap
+        y += row_h + group_gap
+    return svg_shell(y + 4, "\n".join(parts))
 
 
 # --------------------------------------------------------------- pipeline ---
