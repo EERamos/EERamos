@@ -55,11 +55,16 @@ def svg_shell(width: int, height: int, body: str) -> str:
   .text {{ fill: {LIGHT_TEXT}; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }}
   .muted {{ fill: {MUTED}; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }}
   .accent {{ fill: {ACCENT}; }}
+  .accent-stroke {{ stroke: {ACCENT}; }}
   .line {{ stroke: {LIGHT_FAINT}; }}
+  .panel {{ fill: transparent; stroke: {LIGHT_FAINT}; }}
+  .soft {{ fill: #f6f8fa; }}
   @media (prefers-color-scheme: dark) {{
     .text {{ fill: {DARK_TEXT}; }}
     .muted {{ fill: #8c959f; }}
     .line {{ stroke: {DARK_FAINT}; }}
+    .panel {{ stroke: {DARK_FAINT}; }}
+    .soft {{ fill: #161b22; }}
   }}
 </style>
 {body}
@@ -73,11 +78,36 @@ def write(name: str, content: str):
 def section_header(title: str, subtitle: str = "") -> str:
     body = [
         f'<text class="muted" x="0" y="22" font-size="13" letter-spacing="1.4">{esc(title)}</text>',
-        '<line class="line" x1="155" y1="17" x2="900" y2="17" stroke-width="1"/>',
+        '<line class="line" x1="190" y1="17" x2="900" y2="17" stroke-width="1"/>',
     ]
     if subtitle:
         body.append(f'<text class="muted" x="900" y="22" font-size="11" text-anchor="end">{esc(subtitle)}</text>')
     return svg_shell(900, 34, "\n".join(body))
+
+
+def focus_map_svg() -> str:
+    cards = [
+        (30, 38, "DERIVATIVES", "pricing · Greeks · volatility", "01"),
+        (465, 38, "RISK + CALIBRATION", "market risk · credit · models", "02"),
+        (30, 145, "SYSTEMATIC RESEARCH", "statistics · signals · testing", "03"),
+        (465, 145, "APPLIED AI", "agents · workflows · knowledge", "04"),
+    ]
+    parts = [
+        '<text class="muted" x="450" y="18" text-anchor="middle" font-size="11" letter-spacing="1.2">PROFESSIONAL MAP</text>',
+        '<line class="accent-stroke" x1="450" y1="83" x2="450" y2="190" stroke-width="1" opacity="0.45"/>',
+        '<line class="accent-stroke" x1="235" y1="137" x2="665" y2="137" stroke-width="1" opacity="0.45"/>',
+        '<circle class="soft accent-stroke" cx="450" cy="137" r="43" stroke-width="1.5"/>',
+        '<text class="text" x="450" y="132" text-anchor="middle" font-size="13" font-weight="700">CFA</text>',
+        '<text class="text" x="450" y="151" text-anchor="middle" font-size="13" font-weight="700">CQF</text>',
+    ]
+    for x, y, title, subtitle, num in cards:
+        parts.extend([
+            f'<rect class="panel" x="{x}" y="{y}" width="405" height="82" rx="12"/>',
+            f'<text class="accent" x="{x+18}" y="{y+25}" font-size="11" font-weight="700">{num}</text>',
+            f'<text class="text" x="{x+55}" y="{y+30}" font-size="14" font-weight="700">{title}</text>',
+            f'<text class="muted" x="{x+55}" y="{y+54}" font-size="11">{subtitle}</text>',
+        ])
+    return svg_shell(900, 250, "\n".join(parts))
 
 
 def generate_static():
@@ -92,7 +122,9 @@ def generate_static():
 ''',
     )
     write("greeting.svg", greeting)
+    write("profile-map.svg", focus_map_svg())
     write("h-focus.svg", section_header("CURRENT FOCUS", "CQF · FINANCIAL ENGINEERING · APPLIED AI"))
+    write("h-projects.svg", section_header("PROJECT LANDSCAPE", "selected public work"))
     write("h-activity.svg", section_header("PUBLIC BUILD ACTIVITY", "generated from public GitHub data"))
     write("h-elsewhere.svg", section_header("ELSEWHERE", "connect"))
 
@@ -111,7 +143,7 @@ def list_repos():
         if len(batch) < 100:
             break
         page += 1
-    return [r for r in repos if not r.get("fork") and r.get("name") != USER]
+    return [r for r in repos if r.get("name") != USER]
 
 
 def repo_commits(repo_full_name: str):
@@ -140,6 +172,8 @@ def repo_commits(repo_full_name: str):
 def collect_commit_dates(repos):
     dates = []
     for repo in repos:
+        if repo.get("fork"):
+            continue
         for item in repo_commits(repo["full_name"]):
             stamp = (((item.get("commit") or {}).get("author") or {}).get("date"))
             if not stamp:
@@ -149,6 +183,85 @@ def collect_commit_dates(repos):
             except ValueError:
                 pass
     return dates
+
+
+def classify_repo(repo) -> str:
+    text = f"{repo.get('name','')} {repo.get('description','')}".lower()
+    if any(k in text for k in ("black-scholes", "bsm", "option", "greeks", "pricing")):
+        return "DERIVATIVES"
+    if any(k in text for k in ("risk", "calibration", "credit", "volatility")):
+        return "RISK + CALIBRATION"
+    if any(k in text for k in ("normality", "sector", "return", "stat", "signal")):
+        return "MARKET STATISTICS"
+    if any(k in text for k in ("knowledge", "agent", "ai", "management-system")):
+        return "APPLIED AI"
+    return "QUANT / RESEARCH"
+
+
+def project_map_svg(repos) -> str:
+    preferred_names = ["bsm-calculator", "bsm-risky-calibration", "sector-return-normality", "Knowledge-Management-System"]
+    by_name = {r.get("name"): r for r in repos}
+    chosen = [by_name[n] for n in preferred_names if n in by_name]
+    for repo in repos:
+        if repo not in chosen and len(chosen) < 4:
+            chosen.append(repo)
+    chosen = chosen[:4]
+
+    parts = []
+    positions = [(18, 20), (459, 20), (18, 132), (459, 132)]
+    for i, repo in enumerate(chosen):
+        x, y = positions[i]
+        name = esc(repo.get("name"))
+        category = esc(classify_repo(repo))
+        language = esc(repo.get("language") or "multi-language")
+        desc = esc((repo.get("description") or "Public project")[:62])
+        fork = " · fork" if repo.get("fork") else ""
+        parts.extend([
+            f'<rect class="panel" x="{x}" y="{y}" width="423" height="94" rx="12"/>',
+            f'<rect class="accent" x="{x}" y="{y}" width="5" height="94" rx="2.5"/>',
+            f'<text class="muted" x="{x+22}" y="{y+24}" font-size="10" letter-spacing="1">{category}</text>',
+            f'<text class="text" x="{x+22}" y="{y+49}" font-size="14" font-weight="700">{name}</text>',
+            f'<text class="muted" x="{x+22}" y="{y+70}" font-size="10">{desc}</text>',
+            f'<text class="muted" x="{x+401}" y="{y+24}" font-size="10" text-anchor="end">{language}{fork}</text>',
+        ])
+    if not chosen:
+        parts.append('<text class="muted" x="18" y="55" font-size="12">No public repositories yet.</text>')
+    return svg_shell(900, 246, "\n".join(parts))
+
+
+def momentum_svg(dates) -> str:
+    month_keys = []
+    base = NOW.astimezone(TZ).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    for offset in range(11, -1, -1):
+        year = base.year
+        month = base.month - offset
+        while month <= 0:
+            month += 12
+            year -= 1
+        month_keys.append((year, month))
+
+    counts = Counter((d.astimezone(TZ).year, d.astimezone(TZ).month) for d in dates)
+    values = [counts[k] for k in month_keys]
+    peak = max(values) if values else 0
+    chart_x, chart_y, chart_w, chart_h = 45, 55, 810, 100
+    gap = 14
+    bar_w = (chart_w - gap * 11) / 12
+    parts = [
+        '<text class="muted" x="18" y="24" font-size="12">12-month build momentum</text>',
+        f'<text class="text" x="882" y="24" text-anchor="end" font-size="12">{sum(values):,} public commits</text>',
+    ]
+    for i, ((year, month), count) in enumerate(zip(month_keys, values)):
+        height = 3 if peak == 0 else max(3, chart_h * count / peak)
+        x = chart_x + i * (bar_w + gap)
+        y = chart_y + chart_h - height
+        opacity = 0.45 + 0.5 * (i + 1) / 12
+        parts.append(f'<rect class="accent" x="{x:.1f}" y="{y:.1f}" width="{bar_w:.1f}" height="{height:.1f}" rx="4" opacity="{opacity:.2f}"/>')
+        label = dt.date(year, month, 1).strftime("%b").lower()
+        parts.append(f'<text class="muted" x="{x+bar_w/2:.1f}" y="176" font-size="9" text-anchor="middle">{label}</text>')
+        if count:
+            parts.append(f'<text class="muted" x="{x+bar_w/2:.1f}" y="{y-7:.1f}" font-size="9" text-anchor="middle">{count}</text>')
+    parts.append('<line class="line" x1="45" y1="159" x2="855" y2="159"/>')
+    return svg_shell(900, 190, "\n".join(parts))
 
 
 def activity_svg(dates):
@@ -267,9 +380,19 @@ def language_svg(repos):
 
 def main():
     generate_static()
+    dynamic_names = (
+        "project-map.svg",
+        "stats-momentum.svg",
+        "stats-activity.svg",
+        "stats-punch.svg",
+        "stats-recent.svg",
+        "stats-langs.svg",
+    )
     try:
         repos = list_repos()
         dates = collect_commit_dates(repos)
+        write("project-map.svg", project_map_svg(repos))
+        write("stats-momentum.svg", momentum_svg(dates))
         write("stats-activity.svg", activity_svg(dates))
         write("stats-punch.svg", punch_svg(dates))
         write("stats-recent.svg", recent_svg(repos))
@@ -277,7 +400,7 @@ def main():
     except Exception as exc:
         message = esc(f"Profile refresh unavailable: {type(exc).__name__}")
         fallback = svg_shell(900, 90, f'<text class="muted" x="18" y="48" font-size="12">{message}</text>')
-        for name in ("stats-activity.svg", "stats-punch.svg", "stats-recent.svg", "stats-langs.svg"):
+        for name in dynamic_names:
             if not (OUT / name).exists():
                 write(name, fallback)
 
