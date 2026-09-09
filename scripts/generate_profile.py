@@ -196,21 +196,21 @@ def hero_svg() -> str:
 def focus_map_svg() -> str:
     cards = [
         (28, 34, "01", "DERIVATIVES", "pricing · Greeks · volatility"),
-        (466, 34, "02", "RISK + CALIBRATION", "market risk · credit · model calibration"),
+        (486, 34, "02", "RISK + CALIBRATION", "market risk · credit · model calibration"),
         (28, 146, "03", "SYSTEMATIC RESEARCH", "statistics · signals · testing"),
-        (466, 146, "04", "APPLIED AI", "agents · workflows · knowledge systems"),
+        (486, 146, "04", "APPLIED AI", "agents · workflows · knowledge systems"),
     ]
     cx, cy = 450, 130
     parts = [
         f'<line x1="{cx}" y1="34" x2="{cx}" y2="228" stroke="{ACCENT}" stroke-opacity="0.35"/>',
         f'<line x1="28" y1="{cy}" x2="872" y2="{cy}" stroke="{ACCENT}" stroke-opacity="0.35"/>',
-        f'<circle cx="{cx}" cy="{cy}" r="42" fill="{RAISED}" stroke="{ACCENT}" stroke-width="1.5"/>',
+        f'<circle cx="{cx}" cy="{cy}" r="36" fill="{RAISED}" stroke="{ACCENT}" stroke-width="1.5"/>',
         f'<text class="a" x="{cx}" y="{cy - 4}" text-anchor="middle" font-size="13" font-weight="700">CFA</text>',
         f'<text class="a" x="{cx}" y="{cy + 15}" text-anchor="middle" font-size="13" font-weight="700">CQF</text>',
     ]
     for x, y, num, title, subtitle in cards:
         parts.extend([
-            f'<rect x="{x}" y="{y}" width="406" height="82" rx="12" fill="{RAISED}" stroke="{BORDER}"/>',
+            f'<rect x="{x}" y="{y}" width="386" height="82" rx="12" fill="{RAISED}" stroke="{BORDER}"/>',
             f'<text class="a" x="{x + 18}" y="{y + 26}" font-size="11" font-weight="700">{num}</text>',
             f'<text class="t" x="{x + 52}" y="{y + 31}" font-size="14" font-weight="700">{esc(title)}</text>',
             f'<text class="m" x="{x + 52}" y="{y + 55}" font-size="11">{esc(subtitle)}</text>',
